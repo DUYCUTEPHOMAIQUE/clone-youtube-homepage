@@ -24,13 +24,16 @@ import {
   Trophy,
   Lightbulb,
   Shirt,
+  Menu,
 } from "lucide-react";
+import LogoYouTube from "assets/icons/LogoYouTube";
 import { playlists, subscriptions } from "data/sidebar";
 import { useSidebarContext } from "contexts/SidebarContext";
 
 export const SideBar = () => {
-  const { isSmallOpen, isLargeOpen } = useSidebarContext();
-  console.log(isSmallOpen, isLargeOpen);
+  const { isSmallOpen, isLargeOpen, toggle } = useSidebarContext();
+
+  console.log("is small open", isSmallOpen, isLargeOpen);
   return (
     <>
       <aside
@@ -44,13 +47,9 @@ export const SideBar = () => {
         <SmallBarItem Icon={Library} title="Library" url="/" />
       </aside>
       <aside
-        className={` lg:sticky left-[-100%] transition-transform  absolute top-0 overflow-y-auto scrollbar-hidden pb-4 flex-col gap-2 px-2  w-56 ${
+        className={` lg:sticky absolute top-0 overflow-y-auto scrollbar-hidden pb-4 flex-col gap-2 px-2  w-56 ${
           isLargeOpen ? "lg:flex" : "lg:hidden"
-        } ${
-          isSmallOpen
-            ? "flex z-[100] left-[0] transition-transform top-0 bg-white max-h-screen"
-            : "hidden"
-        }`}
+        } hidden`}
       >
         <LargeSideBarSection>
           <LargeSideBarItem Icon={Home} title="Home" url="/" isActive />
@@ -116,6 +115,88 @@ export const SideBar = () => {
           <LargeSideBarItem Icon={Podcast} title="Podcasts" url="/podcasts" />
         </LargeSideBarSection>
       </aside>
+      <div
+        className={`
+        ${
+          isSmallOpen
+            ? "p-4 overflow-y-auto scrollbar-hidden fixed left-[0] top-0 w-56 h-full border-gray-900 bg-[white] ease-in-out duration-500 z-[100]"
+            : "p-4 overflow-y-auto scrollbar-hidden fixed left-[-40%] top-0 w-56 h-full border-gray-900 bg-[white] ease-in-out duration-500 z-[100]"
+        }
+        `}
+      >
+        <div>
+          <div className={`flex gap-4 items-center flex-shrink-0 mb-4`}>
+            <Button onClick={toggle} variant="ghost" size="icon">
+              <Menu />
+            </Button>
+            <LogoYouTube className="w-20" />
+          </div>
+        </div>
+
+        <LargeSideBarSection>
+          <LargeSideBarItem Icon={Home} title="Home" url="/" isActive />
+          <LargeSideBarItem
+            Icon={Clapperboard}
+            title="ClapperBoard"
+            url="/clapperBoard"
+          />
+        </LargeSideBarSection>
+        <hr />
+        <LargeSideBarSection visibleItemCount={5}>
+          <LargeSideBarItem Icon={Library} title="Library" url="/library" />
+          <LargeSideBarItem Icon={History} title="History" url="/history" />
+          <LargeSideBarItem
+            Icon={PlaySquare}
+            title="Your Video"
+            url="/your-video"
+          />
+          <LargeSideBarItem
+            Icon={Clock}
+            title="Watch later"
+            url="/watch-later"
+          />
+          {playlists.map((playlist) => (
+            <LargeSideBarItem
+              key={playlist.id}
+              Icon={ListVideo}
+              title={playlist.name}
+              url={`/${playlist.name}`}
+            />
+          ))}
+        </LargeSideBarSection>
+        <hr />
+        <LargeSideBarSection visibleItemCount={4} title="Subscriptions">
+          {subscriptions.map((subscription) => (
+            <LargeSideBarItem
+              key={subscription.id}
+              Icon={subscription.imgUrl}
+              title={subscription.channelName}
+            />
+          ))}
+        </LargeSideBarSection>
+        <hr />
+        <LargeSideBarSection title="Explore" visibleItemCount={5}>
+          <LargeSideBarItem Icon={Flame} title="Trending" url="/trending" />
+          <LargeSideBarItem
+            Icon={ShoppingBag}
+            title="Shopping"
+            url="/shopping"
+          />
+          <LargeSideBarItem Icon={Music2} title="Music" url="/music" />
+          <LargeSideBarItem Icon={Film} title="Movies & TV" url="/movies-tv" />
+          <LargeSideBarItem Icon={Radio} title="Live" url="/live" />
+          <LargeSideBarItem Icon={Gamepad2} title="Gaming" url="/gaming" />
+          <LargeSideBarItem Icon={Newspaper} title="News" url="/news" />
+          <LargeSideBarItem Icon={Trophy} title="Sports" url="/sports" />
+          <LargeSideBarItem Icon={Lightbulb} title="Learning" url="/learning" />
+          <LargeSideBarItem
+            Icon={Shirt}
+            title="Fashion & Beauty"
+            url="/fashion-beauty"
+          />
+          <LargeSideBarItem Icon={Podcast} title="Podcasts" url="/podcasts" />
+        </LargeSideBarSection>
+      </div>
     </>
   );
 };
