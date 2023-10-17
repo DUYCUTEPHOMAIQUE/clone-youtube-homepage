@@ -1,23 +1,119 @@
 // @ts-nocheck
-import React, { Children } from "react";
-import { buttonStyles } from "./Button";
+import React, { Children, useState } from "react";
+import { Button, buttonStyles } from "./Button";
 import { twMerge } from "tailwind-merge";
-import { Clapperboard, Home, Library, Repeat } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  Clapperboard,
+  Clock,
+  Home,
+  Library,
+  PlaySquare,
+  Repeat,
+  History,
+  ListVideo,
+  Flame,
+  Film,
+  ShoppingBag,
+  Podcast,
+  Music2,
+  Radio,
+  Gamepad2,
+  Newspaper,
+  Trophy,
+  Lightbulb,
+  Shirt,
+} from "lucide-react";
+import { playlists, subscriptions } from "data/sidebar";
+import { useSidebarContext } from "contexts/SidebarContext";
 
 export const SideBar = () => {
+  const { isSmallOpen, isLargeOpen } = useSidebarContext();
+  console.log(isSmallOpen, isLargeOpen);
   return (
     <>
-      <aside className="sticky top-0 overflow-y-auto pb-4 lg:hidden flex-col ml-1 ">
+      <aside
+        className={`sticky top-0 overflow-y-auto pb-4 lg:hidden flex-col ml-1 ${
+          isLargeOpen ? "lg:hidden" : "lg:flex"
+        }`}
+      >
         <SmallBarItem Icon={Home} title="Home" url="/" />
         <SmallBarItem Icon={Repeat} title="Shorts" url="/" />
         <SmallBarItem Icon={Clapperboard} title="Subscriptions" url="/" />
         <SmallBarItem Icon={Library} title="Library" url="/" />
       </aside>
-      <aside className=" lg:sticky absolute top-0 overflow-y-auto scrollbar-hidden pb-4 flex-col gap-2 px-2 flex w-56">
-        <LargeSideBarSection title="Hello Guys">
+      <aside
+        className={` lg:sticky left-[-100%] transition-transform  absolute top-0 overflow-y-auto scrollbar-hidden pb-4 flex-col gap-2 px-2  w-56 ${
+          isLargeOpen ? "lg:flex" : "lg:hidden"
+        } ${
+          isSmallOpen
+            ? "flex z-[100] left-[0] transition-transform top-0 bg-white max-h-screen"
+            : "hidden"
+        }`}
+      >
+        <LargeSideBarSection>
           <LargeSideBarItem Icon={Home} title="Home" url="/" isActive />
-          <LargeSideBarItem Icon={Home} title="Home" url="/" />
-          <LargeSideBarItem Icon={Home} title="Home" url="/" />
+          <LargeSideBarItem
+            Icon={Clapperboard}
+            title="ClapperBoard"
+            url="/clapperBoard"
+          />
+        </LargeSideBarSection>
+        <hr />
+        <LargeSideBarSection visibleItemCount={5}>
+          <LargeSideBarItem Icon={Library} title="Library" url="/library" />
+          <LargeSideBarItem Icon={History} title="History" url="/history" />
+          <LargeSideBarItem
+            Icon={PlaySquare}
+            title="Your Video"
+            url="/your-video"
+          />
+          <LargeSideBarItem
+            Icon={Clock}
+            title="Watch later"
+            url="/watch-later"
+          />
+          {playlists.map((playlist) => (
+            <LargeSideBarItem
+              key={playlist.id}
+              Icon={ListVideo}
+              title={playlist.name}
+              url={`/${playlist.name}`}
+            />
+          ))}
+        </LargeSideBarSection>
+        <hr />
+        <LargeSideBarSection visibleItemCount={4} title="Subscriptions">
+          {subscriptions.map((subscription) => (
+            <LargeSideBarItem
+              key={subscription.id}
+              Icon={subscription.imgUrl}
+              title={subscription.channelName}
+            />
+          ))}
+        </LargeSideBarSection>
+        <hr />
+        <LargeSideBarSection title="Explore" visibleItemCount={5}>
+          <LargeSideBarItem Icon={Flame} title="Trending" url="/trending" />
+          <LargeSideBarItem
+            Icon={ShoppingBag}
+            title="Shopping"
+            url="/shopping"
+          />
+          <LargeSideBarItem Icon={Music2} title="Music" url="/music" />
+          <LargeSideBarItem Icon={Film} title="Movies & TV" url="/movies-tv" />
+          <LargeSideBarItem Icon={Radio} title="Live" url="/live" />
+          <LargeSideBarItem Icon={Gamepad2} title="Gaming" url="/gaming" />
+          <LargeSideBarItem Icon={Newspaper} title="News" url="/news" />
+          <LargeSideBarItem Icon={Trophy} title="Sports" url="/sports" />
+          <LargeSideBarItem Icon={Lightbulb} title="Learning" url="/learning" />
+          <LargeSideBarItem
+            Icon={Shirt}
+            title="Fashion & Beauty"
+            url="/fashion-beauty"
+          />
+          <LargeSideBarItem Icon={Podcast} title="Podcasts" url="/podcasts" />
         </LargeSideBarSection>
       </aside>
     </>
@@ -39,24 +135,43 @@ function SmallBarItem({ Icon, title, url }) {
   );
 }
 
-function LargeSideBarSection({
+export function LargeSideBarSection({
   children,
   title,
   visibleItemCount = Number.POSITIVE_INFINITY,
 }) {
+  const [isExpanded, setIsExpanded] = useState(false);
   const childrenArray = Children.toArray(children).flat();
 
-  const visibleChildren = childrenArray.slice(0, visibleItemCount);
+  const showExpandButton = childrenArray.length > visibleItemCount;
+
+  const visibleChildren = isExpanded
+    ? childrenArray
+    : childrenArray.slice(0, visibleItemCount);
+
+  const ButtonIcon = isExpanded ? ChevronUp : ChevronDown;
 
   return (
     <div>
       {title && <div className="ml-4 mt-2 text-lg mb-1">{title}</div>}
       {visibleChildren}
+      {showExpandButton && (
+        <Button
+          onClick={() => setIsExpanded((e) => !e)}
+          variant="ghost"
+          className="flex items-center w-full gap-4 p-3 rounded-lg"
+        >
+          <ButtonIcon className="w-6 h-6" />
+          <div className="center font-semibold">
+            {isExpanded ? "Show Less" : "Show More"}
+          </div>
+        </Button>
+      )}
     </div>
   );
 }
 
-function LargeSideBarItem({ Icon, title, url, isActive = false }) {
+export function LargeSideBarItem({ Icon, title, url, isActive = false }) {
   return (
     // eslint-disable-next-line jsx-a11y/anchor-has-content
     <a
@@ -68,7 +183,11 @@ function LargeSideBarItem({ Icon, title, url, isActive = false }) {
         }`
       )}
     >
-      <Icon className="w-6 h-6" />
+      {typeof Icon === "string" ? (
+        <img src={Icon} className="w-6 h-6 rounded-full" alt="" />
+      ) : (
+        <Icon className="w-6 h-6" />
+      )}
       <div className="whitespace-nowrap overflow-hidden text-ellipsis">
         {title}
       </div>

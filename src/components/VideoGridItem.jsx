@@ -17,13 +17,26 @@ const VideoGridItem = ({
 
   useEffect(() => {
     if (videoRef.current === null) return;
+    //code to fix DOMException: The play() request was interrupted by a call to pause().
+    let playPromise = videoRef.current.play();
 
-    if (isVideoPlaying) {
-      videoRef.current.currentTime = 0;
-      videoRef.current.play();
-    } else {
-      videoRef.current.pause();
+    if (playPromise !== undefined) {
+      playPromise
+        .then((e) => {
+          videoRef.current.currentTime = 0;
+          videoRef.current.pause();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
+
+    // if (isVideoPlaying) {
+    //   videoRef.current.currentTime = 0;
+    //   videoRef.current.play();
+    // } else {
+    //   videoRef.current.pause();
+    // }
   }, [isVideoPlaying]);
 
   return (

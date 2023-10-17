@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import Logo from "../assets/Logo.png";
 import { ArrowLeft, Bell, Menu, Mic, Search, Upload, User } from "lucide-react";
 import { Button } from "../components/Button";
+import LogoYouTube from "assets/icons/LogoYouTube";
+import { useSidebarContext } from "contexts/SidebarContext";
 
 const PageHeader = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
+  const { toggle } = useSidebarContext();
+
   return (
     <div className="flex gap-10 lg:gap-20 justify-between mb-6 mx-4 mt-2">
       <div
@@ -12,12 +15,10 @@ const PageHeader = () => {
           showSearchBar ? "hidden" : ""
         }`}
       >
-        <Button variant="ghost" size="icon">
+        <Button onClick={toggle} variant="ghost" size="icon">
           <Menu />
         </Button>
-        <a href="/">
-          <img src={Logo} className="h-6" alt="logo" />
-        </a>
+        <LogoYouTube className="w-20" />
       </div>
       <form
         className={` flex-grow justify-center gap-4 ${
@@ -40,12 +41,12 @@ const PageHeader = () => {
         <div className="flex flex-grow max-w-[600px]">
           <input
             type="search"
-            className="rounded-l-full border border-secondary-border shadow-inner shadow-secondary text-lg w-full py-2 px-4 focus:border-blue-500 outline-none"
+            className="rounded-l-full border border-secondary-border shadow-inner shadow-secondary text-lg w-full py-1 px-4 focus:border-blue-500 outline-none"
             placeholder="Search"
           />
           <Button
             type="button"
-            className="rounded-r-full  border border-secondary-border py-2 px-4"
+            className="rounded-r-full  border border-secondary-border py-1 px-4"
           >
             <Search />
           </Button>
