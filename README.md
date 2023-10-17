@@ -2,10 +2,7 @@
 
 This constructure is noob :<
 
-,**\_,
-[O.o]
-/)**)
--"--"-
+<img src="./src/assets/horimiya.gif">
 
 # Getting Started with Create React App
 
