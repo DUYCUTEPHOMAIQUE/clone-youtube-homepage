@@ -46,6 +46,7 @@ export const SideBar = () => {
         <SmallBarItem Icon={Clapperboard} title="Subscriptions" url="/" />
         <SmallBarItem Icon={Library} title="Library" url="/" />
       </aside>
+
       <aside
         className={` lg:sticky absolute top-0 overflow-y-auto scrollbar-hidden pb-4 flex-col gap-2 px-2  w-56 ${
           isLargeOpen ? "lg:flex" : "lg:hidden"
@@ -115,6 +116,9 @@ export const SideBar = () => {
           <LargeSideBarItem Icon={Podcast} title="Podcasts" url="/podcasts" />
         </LargeSideBarSection>
       </aside>
+      {isSmallOpen && (
+        <div className="fixed inset-0 lg:hidden  z-[99] bg-secondary-dark opacity-50 transition-colors"></div>
+      )}
       <div
         className={`
         ${
