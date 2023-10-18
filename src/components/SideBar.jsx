@@ -124,7 +124,7 @@ export const SideBar = () => {
         ${
           isSmallOpen
             ? "p-4 overflow-y-auto scrollbar-hidden fixed left-[0] top-0 w-56 h-full border-gray-900 bg-[white] ease-in-out duration-500 z-[100]"
-            : "p-4 overflow-y-auto scrollbar-hidden fixed left-[-40%] top-0 w-56 h-full border-gray-900 bg-[white] ease-in-out duration-500 z-[100]"
+            : "p-4 overflow-y-auto scrollbar-hidden fixed left-[-60%] top-0 w-56 h-full border-gray-900 bg-[white] ease-in-out duration-500 z-[100]"
         }
         `}
       >
